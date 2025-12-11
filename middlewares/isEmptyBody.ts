@@ -1,6 +1,8 @@
+import express, { Request, Response, NextFunction } from "express";
+
 import { HttpError } from '../helpers/HttpError.js';
 
-const isEmptyBody = (req, res, next) => {
+const isEmptyBody = (req: Request, res: Response, next: NextFunction) => {
     const { length } = Object.keys(req.body); 
 
     if(!length) { 

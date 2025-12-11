@@ -1,10 +1,12 @@
+import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
-import express from "express";
 import logger from "morgan";
-import authRouter from "./routes/api/auth.js";
-
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+
+import authRouter from "./routes/api/auth.js";
+import { CustomError } from "./helpers/HttpError.js";
+
 
 const app = express();
 
@@ -29,7 +31,7 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ["./routes/api/auth.js", "./swagger/components.js"],
+  apis: ["./routes/api/auth.ts", "./swagger/components.ts"],
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
@@ -38,13 +40,25 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/api/auth", authRouter);
 
-app.use((req, res) => {
+app.use((req: Request, res: Response) => {
   res.status(404).json({ message: "Not found" });
 });
 
-app.use((err, req, res, next) => {
-  const { status = 500, message = "Server error" } = err;
-  // res.status(500).json({ message: err.message })
+app.use((err: CustomError, req: Request, res: Response, next: NextFunction) => {
+  // const { status = 500, message = "Server error" } = err;
+  // // res.status(500).json({ message: err.message })
+  // res.status(status).json({ message });
+
+  const status = err.status || 500;
+  let message: string;
+
+  if (status === 500) {
+      message = "Server error"; 
+      console.error("Internal Server Error:", err.message);
+  } else {
+      message = err.message;
+  }
+
   res.status(status).json({ message });
 });
 

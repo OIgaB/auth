@@ -1,8 +1,16 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Document, Query } from 'mongoose';
 import Joi from 'joi';
 
-import { validateAtUpdate} from '../middlewares/index.js'
-import { handleMongooseError } from '../middlewares/index.js';
+import validateAtUpdate from '../middlewares/validateAtUpdate.js';
+import handleMongooseError from '../middlewares/handleMongooseError.js';
+
+// import { validateAtUpdate} from '../middlewares/index.js'
+// import { handleMongooseError } from '../middlewares/index.js';
+
+export interface IUser {
+    email: string;
+    password: string;
+}
 
 const emailRegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const emailMessage = 'Sorry, the provided email address is not valid. Please ensure it follows the correct format. Examples of valid email addresses: john.doe@example.com, jane_doe123@example.co.uk, user123@example-domain.com';
@@ -21,9 +29,9 @@ const userSchema = new Schema({
     },
 }, { versionKey: false, timestamps: true });
 
-userSchema.pre("findOneAndUpdate", validateAtUpdate);
-userSchema.post('save', handleMongooseError);
-userSchema.post('findOneAndUpdate', handleMongooseError);
+userSchema.pre<Query<IUser, Document<IUser>>>("findOneAndUpdate", validateAtUpdate as any);
+userSchema.post<IUser>('save', handleMongooseError as any);
+userSchema.post<Query<IUser, Document<IUser>>>('findOneAndUpdate', handleMongooseError as any);
 
 const registerSchema = Joi.object({
     email: Joi.string().pattern(emailRegExp).message(emailMessage).required(),

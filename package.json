@@ -2,13 +2,15 @@
   "name": "auth",
   "version": "1.0.0",
   "description": "Authentication and authorization tool",
-  "main": "server.js",
+  "main": "server.ts",
   "type": "module",
   "author": "Olga Bagrii",
   "license": "ISC",
   "scripts": {
-    "start": "cross-env NODE_ENV=production node ./server.js",
-    "start:dev": "cross-env NODE_ENV=development nodemon ./server.js",
+    "start": "cross-env NODE_ENV=production node ./dist/server.ts",
+    "start:dev": "cross-env NODE_ENV=development tsx watch ./server.ts",
+    "build": "tsc",
+    "start:ts": "npm run build && node ./dist/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
@@ -25,8 +27,19 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/cors": "^2.8.19",
+    "@types/dotenv": "^8.2.3",
+    "@types/express": "^5.0.6",
+    "@types/joi": "^17.2.3",
+    "@types/mongoose": "^5.11.97",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^25.0.0",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
     "cross-env": "^10.1.0",
     "joi": "^18.0.2",
-    "nodemon": "^3.1.11"
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
   }
 }

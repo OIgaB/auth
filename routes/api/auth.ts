@@ -68,5 +68,6 @@ const router = express.Router();
  */
 
 router.post('/signup', isEmptyBody, validateBody(schemas.registerSchema), authCtrl.register);
+router.post('/signin', isEmptyBody, validateBody(schemas.signInSchema), authCtrl.signIn);
 
 export default router; 

@@ -29,8 +29,9 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ["./controllers/*.js", "./swagger/components.js"],
+  apis: ["./routes/api/auth.js", "./swagger/components.js"],
 };
+
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));

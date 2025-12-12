@@ -87,6 +87,41 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/UnauthorizedErrorResponse'
+ *             examples:
+ *               wrongCredentials:
+ *                 value:
+ *                   statusCode: 401
+ *                   message: "Email or password is wrong"
+ *       500:
+ *         description: Internal Server Error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ServerErrorResponse'
+ */
+
+/**
+ * @swagger
+ * /api/auth/signout:
+ *   post:
+ *     summary: Sign out the current user
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       204:
+ *         description: Successfully signed out. No content returned.
+ *       401:
+ *         description: Unauthorized — invalid or missing token.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UnauthorizedErrorResponse'
+ *             examples:
+ *               invalidToken:
+ *                 value:
+ *                   statusCode: 401
+ *                   message: "Invalid or missing token"
  *       500:
  *         description: Internal Server Error.
  *         content:

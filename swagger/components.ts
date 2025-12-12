@@ -1,6 +1,11 @@
 /**
  * @swagger
  * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
  *   schemas:
  *     AuthBody:
  *       type: object
@@ -67,7 +72,6 @@
  *           example: 401
  *         message:
  *           type: string
- *           example: "Email or password is wrong"
  * 
  *     ConflictErrorResponse:
  *       type: object

@@ -52,7 +52,7 @@ const signIn = async (req: Request, res: Response) => {
     id: user._id,
   };
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
-  await User.findByIdAndUpdate(user._id, { token }, { runValidators: true});
+  await User.findByIdAndUpdate(user._id, { token }, { runValidators: true });
 
   res.json({
     token,
@@ -62,7 +62,15 @@ const signIn = async (req: Request, res: Response) => {
   });
 };
 
+const signOut = async (req: Request, res: Response) => {
+  const { _id } = req.user;
+  await User.findByIdAndUpdate(_id, { token: "" });
+
+  res.status(204).send()
+};
+
 export default {
   register: ctrlWrapper(register),
   signIn: ctrlWrapper(signIn),
+  signOut: ctrlWrapper(signOut),
 };

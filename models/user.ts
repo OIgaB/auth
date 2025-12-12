@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { Document, Query, Schema, model } from "mongoose";
+import { Document, model, Query, Schema, Types } from "mongoose";
 
 import handleMongooseError from "../middlewares/handleMongooseError.js";
 
@@ -7,6 +7,9 @@ export interface IUser {
   email: string;
   password: string;
   token: string;
+}
+export interface IUserDocument extends IUser, Document {
+  _id: Types.ObjectId;
 }
 
 const emailRegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -65,4 +68,4 @@ export const schemas = {
   signInSchema,
 };
 
-export const User = model("user", userSchema);
+export const User = model<IUserDocument>("user", userSchema);

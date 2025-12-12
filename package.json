@@ -30,7 +30,6 @@
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
     "@types/cors": "^2.8.19",
-    "@types/dotenv": "^8.2.3",
     "@types/express": "^5.0.6",
     "@types/joi": "^17.2.3",
     "@types/jsonwebtoken": "^9.0.10",

@@ -1,11 +1,11 @@
-import express from 'express';
+import express from "express";
 
-import { isEmptyBody } from '../../middlewares/index.js';
-import { validateBody } from '../../decorators/index.js'
-import { schemas } from '../../models/user.js';
-import { authCtrl } from '../../controllers/index.js';
+import { authCtrl } from "../../controllers/index.js";
+import { validateBody } from "../../decorators/index.js";
+import { authenticate, isEmptyBody } from "../../middlewares/index.js";
+import { schemas } from "../../models/user.js";
 
-const router = express.Router(); 
+const router = express.Router();
 
 /**
  * @swagger
@@ -95,7 +95,18 @@ const router = express.Router();
  *               $ref: '#/components/schemas/ServerErrorResponse'
  */
 
-router.post('/signup', isEmptyBody, validateBody(schemas.registerSchema), authCtrl.register);
-router.post('/signin', isEmptyBody, validateBody(schemas.signInSchema), authCtrl.signIn);
+router.post(
+  "/signup",
+  isEmptyBody,
+  validateBody(schemas.registerSchema),
+  authCtrl.register
+);
+router.post(
+  "/signin",
+  isEmptyBody,
+  validateBody(schemas.signInSchema),
+  authCtrl.signIn
+);
+router.post("/signout", authenticate, authCtrl.signOut);
 
-export default router; 
+export default router;

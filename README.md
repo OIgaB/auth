@@ -4,15 +4,22 @@ This is a [Node.js](https://nodejs.org/) project that uses a non-relational data
 
 ### Signup process includes:
 - checking for an empty body;
-- validation against Joi schema (user input);
+- validating the request body against the Joi schema (user input);
 - checking if email is unique;
-- hashing the password with `bcrypt` before saving;
+- hashing the password with `bcrypt.hash` before saving;
 - validating against Mongoose schema (database constraints);
 - creating a new user record in MongoDB;
 - handling validation, database, and server errors with structured responses.
 
-### Signup process includes:
-To be continued ...
+### Signin process includes:
+- checking for an empty body;
+- validating the request body against the Joi schema (user input);
+- finding the user by email in the database;
+- verifying the entered password using `bcrypt.compare`;
+- generating a JWT token with `jwt.sign` and 23h expiration time;
+- validating against Mongoose schema (database constraints);
+- updating the user record in MongoDB with new token;
+- handling validation, database, and server errors with structured responses.
 
 ---
 
@@ -48,9 +55,10 @@ BASE_API:
 ```bash
 http://localhost:3001/api/auth
 ```
+<table><tr><td>1) signup:</td></tr></table>  
 
-1) signup: 
-POST-request 
+$\color{LimeGreen}{POST-request}$
+
 ```bash
 {{BASE_API}}/signup
 ```
@@ -62,7 +70,20 @@ Body (raw, JSON):
 }
 ```
 
-2) to be continued ...
+<table><tr><td>2) signin:</td></tr></table>  
+
+$\color{LimeGreen}{POST-request}$
+
+```bash
+{{BASE_API}}/signin
+```
+Body (raw, JSON):
+```bash 
+{
+  "email": "example@mail.com",
+  "password": "example_password"
+}
+```
 
 ---
 

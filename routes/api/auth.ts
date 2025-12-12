@@ -9,6 +9,13 @@ const router = express.Router();
 
 /**
  * @swagger
+ * tags:
+ *   - name: Auth
+ *     description: Endpoints for user registration and login
+ */
+
+/**
+ * @swagger
  * /api/auth/signup:
  *   post:
  *     summary: Register a new user
@@ -18,53 +25,74 @@ const router = express.Router();
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             $ref: '#/components/schemas/AuthBody'
  *     responses:
  *       201:
- *         description: Registration successful.    
+ *         description: Registration successful.
  *         content:
- *           application/json:    
+ *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 user:
- *                   $ref: '#/components/schemas/UserResponse'
+ *                   $ref: '#/components/schemas/SignupSuccessResponse'
  *       400:
- *         description: Bad Request. Occurs if the request body is empty or fails schema validation (e.g., password < 6 chars, invalid email).
+ *         description: Bad Request — empty body or validation error.
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Request body is empty or some field failed validation"
- *       404:
- *         description: Not Found. The requested endpoint does not exist.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Not Found. The requested endpoint does not exist"
+ *               $ref: '#/components/schemas/ValidationErrorResponse'
  *       409:
- *         description: Conflict (email already in use).
+ *         description: Conflict — email already in use.
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Email already in use"
+ *               $ref: '#/components/schemas/ConflictErrorResponse'
  *       500:
- *         description: Internal Server Error. Generic error handler fallback.
+ *         description: Internal Server Error.
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Error'
+ *               $ref: '#/components/schemas/ServerErrorResponse'
+ */
+
+/**
+ * @swagger
+ * /api/auth/signin:
+ *   post:
+ *     summary: Authenticate a user and return a JWT token
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/AuthBody'
+ *     responses:
+ *       200:
+ *         description: Login successful. Returns a JWT token and user info.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SigninSuccessResponse'
+ *       400:
+ *         description: Bad Request — validation error or missing fields.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ValidationErrorResponse'
+ *       401:
+ *         description: Unauthorized — wrong email or password.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UnauthorizedErrorResponse'
+ *       500:
+ *         description: Internal Server Error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ServerErrorResponse'
  */
 
 router.post('/signup', isEmptyBody, validateBody(schemas.registerSchema), authCtrl.register);

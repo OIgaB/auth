@@ -2,12 +2,11 @@ import Joi from "joi";
 import { Document, Query, Schema, model } from "mongoose";
 
 import handleMongooseError from "../middlewares/handleMongooseError.js";
-import validateAtUpdate from "../middlewares/validateAtUpdate.js";
 
 export interface IUser {
   email: string;
   password: string;
-  token: string
+  token: string;
 }
 
 const emailRegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;

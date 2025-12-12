@@ -2,7 +2,7 @@
  * @swagger
  * components:
  *   schemas:
- *     User:
+ *     AuthBody:
  *       type: object
  *       required:
  *         - email
@@ -11,14 +11,16 @@
  *         email:
  *           type: string
  *           format: email
- *           description: User's unique email address.
+ *           description: User's email address.
+ *           example: "user@example.com"
  *         password:
  *           type: string
  *           format: password
  *           minLength: 6
  *           description: User's password (min 6 characters).
- *           example: "securepassword123"
- *     UserResponse:
+ *           example: "securePassword123"
+ *
+ *     SignupSuccessResponse:
  *       type: object
  *       required:
  *         - email
@@ -26,12 +28,64 @@
  *         email:
  *           type: string
  *           format: email
- *           description: The email of the newly registered user.
+ *           description: The email of the user.
  *           example: "registered@example.com"
- *     Error:
+ *
+ *     SigninSuccessResponse:
+ *       type: object
+ *       required:
+ *         - token
+ *         - user
+ *       properties:
+ *         token:
+ *           type: string
+ *           description: JWT token used for authenticated requests.
+ *           example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *         user:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *               format: email
+ *               example: "logged_in@example.com"
+ *     
+ *     ValidationErrorResponse:
  *       type: object
  *       properties:
+ *         statusCode:
+ *           type: integer
+ *           example: 400
  *         message:
  *           type: string
- *           example: "Server error"
+ *           example: "Validation error"
+ * 
+ *     UnauthorizedErrorResponse:
+ *       type: object
+ *       properties:
+ *         statusCode:
+ *           type: integer
+ *           example: 401
+ *         message:
+ *           type: string
+ *           example: "Email or password is wrong"
+ * 
+ *     ConflictErrorResponse:
+ *       type: object
+ *       properties:
+ *         statusCode:
+ *           type: integer
+ *           example: 409
+ *         message:
+ *           type: string
+ *           example: "Email already in use"
+ * 
+ *     ServerErrorResponse:
+ *       type: object
+ *       properties:
+ *         statusCode:
+ *           type: integer
+ *           example: 500
+ *         message:
+ *           type: string
+ *           example: "Internal Server Error"
  */

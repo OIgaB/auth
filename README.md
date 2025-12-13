@@ -21,6 +21,14 @@ This is a [Node.js](https://nodejs.org/) project that uses a non-relational data
 - updating the user record in MongoDB with new token;
 - handling validation, database, and server errors with structured responses.
 
+### Signout process includes:
+- extracting the JWT from the Authorization header;
+- verifying the JWT signature and expiration;
+- extracting the user identifier from the token payload;
+- finding the user in the database by identifier;
+- clearing the stored token in MongoDB to invalidate the session;
+- handling authentication and server errors with structured responses.
+
 ---
 
 ## Getting Started
@@ -37,6 +45,8 @@ npm i
 cp env.default .env
 ```
 
+---
+
 ### 🧩 Start backend
 
 Run in development mode:
@@ -49,6 +59,8 @@ Run in production mode:
 npm start
 ```
 
+---
+
 ### 🧪 Test with Postman
 
 BASE_API: 
@@ -57,7 +69,7 @@ http://localhost:3001/api/auth
 ```
 <table><tr><td>1) signup:</td></tr></table>  
 
-$\color{LimeGreen}{POST-request}$
+$\color{LimeGreen}{🟢 POST-request}$
 
 ```bash
 {{BASE_API}}/signup
@@ -72,7 +84,7 @@ Body (raw, JSON):
 
 <table><tr><td>2) signin:</td></tr></table>  
 
-$\color{LimeGreen}{POST-request}$
+$\color{LimeGreen}{🟢 POST-request}$
 
 ```bash
 {{BASE_API}}/signin
@@ -85,12 +97,24 @@ Body (raw, JSON):
 }
 ```
 
+<table><tr><td>3) signout:</td></tr></table>
+
+$\color{LimeGreen}{🟢 POST-request}$
+
+Authorization → Bearer Token
+
+```bash
+{{BASE_API}}/signout
+```
+
+After successful signout, the JWT becomes invalid even if it has not yet expired.
+
 ---
 
 ## ⚙️ Requirements
 
-- *Node.js*>= 20.0.0  
-- *Package manager:*npm 
+- Node.js >= 20.0.0  
+- Package manager: npm 
 
 ---
 

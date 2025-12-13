@@ -130,6 +130,40 @@ const router = express.Router();
  *               $ref: '#/components/schemas/ServerErrorResponse'
  */
 
+/**
+ * @swagger
+ * /api/auth/current:
+ *   get:
+ *     summary: Get information about current user
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Successfully received information about current user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CurrentUserResponse'
+ *       401:
+ *         description: Unauthorized — invalid or missing token.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UnauthorizedErrorResponse'
+ *             examples:
+ *               invalidToken:
+ *                 value:
+ *                   statusCode: 401
+ *                   message: "Invalid or missing token"
+ *       500:
+ *         description: Internal Server Error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ServerErrorResponse'
+ */
+
 router.post(
   "/signup",
   isEmptyBody,

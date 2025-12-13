@@ -34,7 +34,7 @@
  *           type: string
  *           format: email
  *           description: The email of the user.
- *           example: "registered@example.com"
+ *           example: "user@example.com"
  *
  *     SigninSuccessResponse:
  *       type: object
@@ -52,7 +52,17 @@
  *             email:
  *               type: string
  *               format: email
- *               example: "logged_in@example.com"
+ *               example: "user@example.com"
+ * 
+ *     CurrentUserResponse:
+ *       type: object
+ *       required:
+ *         - email
+ *       properties:
+ *         email:
+ *           type: string
+ *           format: email
+ *           example: "user@example.com"
  *     
  *     ValidationErrorResponse:
  *       type: object

@@ -143,5 +143,6 @@ router.post(
   authCtrl.signIn
 );
 router.post("/signout", authenticate, authCtrl.signOut);
+router.get('/current', authenticate, authCtrl.getCurrent);
 
 export default router;

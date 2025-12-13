@@ -66,11 +66,18 @@ const signOut = async (req: Request, res: Response) => {
   const { _id } = req.user;
   await User.findByIdAndUpdate(_id, { token: "" });
 
-  res.status(204).send()
+  res.status(204).send();
+};
+
+const getCurrent = async (req: Request, res: Response) => {
+  const { email } = req.user;
+
+  res.json({ email });
 };
 
 export default {
   register: ctrlWrapper(register),
   signIn: ctrlWrapper(signIn),
   signOut: ctrlWrapper(signOut),
+  getCurrent: ctrlWrapper(getCurrent),
 };

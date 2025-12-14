@@ -9,6 +9,7 @@ This is a [Node.js](https://nodejs.org/) project that uses a non-relational data
 - hashing the password with `bcrypt.hash` before saving;
 - validating against Mongoose schema (database constraints);
 - creating a new user record in MongoDB;
+- sending frontend user's data;
 - handling validation, database, and server errors with structured responses.
 
 ### Signin process includes:
@@ -16,31 +17,45 @@ This is a [Node.js](https://nodejs.org/) project that uses a non-relational data
 - validating the request body against the Joi schema (user input);
 - finding the user by email in the database;
 - verifying the entered password using `bcrypt.compare`;
-- generating a JWT token with `jwt.sign` and 23h expiration time;
+- generating a JWT access token with `jwt.sign` and 15 minutes expiration time;
+- generating a JWT refresh token with `jwt.sign` and 7 days expiration time;
+- saving JWT refresh token in an httpOnly response cookie;
 - validating against Mongoose schema (database constraints);
-- updating the user record in MongoDB with new token;
+- updating the user record in MongoDB with new JWT refresh token;
+- sending frontend JWT access token and user data;
 - handling validation, database, and server errors with structured responses.
 
-### Signout process includes:
-- extracting the JWT from the Authorization header;
-- verifying the JWT signature and expiration;
+### Refresh token process includes:
+- extracting the JWT refresh token from the request's cookies;
+- verifying the JWT signature and expiration with `jwt.verify`;
 - extracting the user identifier from the token payload;
 - finding the user in the database by identifier;
-- clearing the stored token in MongoDB to invalidate the session;
+- validating that the provided refresh token matches the one stored in the database;
+- generating a new JWT access token with `jwt.sign` and 15 minutes expiration time;
+- sending frontend a new JWT access token;
+- handling authentication and server errors with structured responses.
+
+### Signout process includes:
+- extracting the JWT access token from the Authorization header;
+- verifying the JWT signature and expiration with `jwt.verify`;
+- extracting the user identifier from the token payload;
+- finding the user in the database by identifier;
+- clearing the stored JWT refresh token in MongoDB to invalidate the session;
 - handling authentication and server errors with structured responses.
 
 ### Getting current user process includes:
-- extracting the JWT from the Authorization header;
-- verifying the JWT signature and expiration;
+- extracting the JWT access token from the Authorization header;
+- verifying the JWT signature and expiration with `jwt.verify`;
 - extracting the user identifier from the token payload;
 - finding the user in the database by identifier;
+- sending frontend user data;
 - handling authentication and server errors with structured responses.
 
 ### Removing current user process includes:
-- extracting the JWT from the Authorization header;
-- verifying the JWT signature and expiration;
+- extracting the JWT access token from the Authorization header;
+- verifying the JWT signature and expiration with `jwt.verify`;
 - extracting the user identifier from the token payload;
-- finding the user in the database by identifier and removing him/her;
+- invalidating the user's session by removing the user record from the DB;
 - handling authentication and server errors with structured responses.
 
 ---
@@ -111,6 +126,14 @@ Body (raw, JSON):
 }
 ```
 
+<table><tr><td>refresh:</td></tr></table>  
+
+$\color{LimeGreen}{🟢 POST-request}$
+
+```bash
+{{BASE_API}}/refresh
+```
+
 <table><tr><td>signout:</td></tr></table>
 
 $\color{LimeGreen}{🟢 POST-request}$
@@ -121,7 +144,7 @@ Bearer Token is required
 {{BASE_API}}/signout
 ```
 
-After successful signout, the JWT becomes invalid even if it has not yet expired.
+After successful signout, the JWT refresh token becomes invalid even if it has not yet expired.
 
 <table><tr><td>current user:</td></tr></table>
 

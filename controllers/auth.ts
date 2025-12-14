@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 import { ctrlWrapper } from "../decorators/index.js";
 import { HttpError } from "../helpers/HttpError.js";
@@ -11,13 +11,12 @@ interface RegisterRequestBody {
   password: string;
 }
 
-const { SECRET_KEY } = process.env;
+const { SECRET_KEY, REFRESH_SECRET_KEY } = process.env;
 
 const register = async (
   req: Request<{}, {}, RegisterRequestBody>,
   res: Response
 ) => {
-  // console.info("req.body: ", req.body);
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
@@ -48,11 +47,26 @@ const signIn = async (req: Request, res: Response) => {
   if (!SECRET_KEY) {
     throw HttpError(401, "SECRET_KEY environment variable is missing.");
   }
-  const payload = {
-    id: user._id,
-  };
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
-  await User.findByIdAndUpdate(user._id, { token }, { runValidators: true });
+  const payload = { id: user._id };
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "15m" }); // access token
+
+  if (!REFRESH_SECRET_KEY) {
+    throw HttpError(401, "REFRESH_SECRET_KEY environment variable is missing.");
+  }
+
+  const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
+    expiresIn: "7d",
+  });
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+  });
+
+  await User.findByIdAndUpdate(
+    user._id,
+    { refreshToken },
+    { runValidators: true }
+  );
 
   res.json({
     token,
@@ -64,7 +78,7 @@ const signIn = async (req: Request, res: Response) => {
 
 const signOut = async (req: Request, res: Response) => {
   const { _id } = req.user;
-  await User.findByIdAndUpdate(_id, { token: "" });
+  await User.findByIdAndUpdate(_id, { refreshToken: "" });
 
   res.status(204).send();
 };
@@ -82,10 +96,41 @@ const removeCurrent = async (req: Request, res: Response) => {
   res.status(204).send();
 };
 
+const refresh = async (req: Request, res: Response) => {
+  const { refreshToken } = req.cookies;
+
+  if (!refreshToken) {
+    throw HttpError(401, "Missing refresh token");
+  }
+
+  if (!REFRESH_SECRET_KEY) {
+    throw HttpError(401, "REFRESH_SECRET_KEY environment variable is missing.");
+  }
+
+  const { id } = jwt.verify(refreshToken, REFRESH_SECRET_KEY) as JwtPayload;
+
+  const user = await User.findById(id);
+
+  if (!user || user.refreshToken !== refreshToken) {
+    throw HttpError(401, "Invalid refresh token");
+  }
+
+  if (!SECRET_KEY) {
+    throw HttpError(401, "SECRET_KEY environment variable is missing.");
+  }
+
+  const newAccessToken = jwt.sign({ id: user._id }, SECRET_KEY, {
+    expiresIn: "15m",
+  });
+
+  res.json({ token: newAccessToken });
+};
+
 export default {
   register: ctrlWrapper(register),
   signIn: ctrlWrapper(signIn),
   signOut: ctrlWrapper(signOut),
   getCurrent: ctrlWrapper(getCurrent),
   removeCurrent: ctrlWrapper(removeCurrent),
+  refresh: ctrlWrapper(refresh),
 };

@@ -206,6 +206,7 @@ router.post(
   validateBody(schemas.signInSchema),
   authCtrl.signIn
 );
+router.post("/refresh", authCtrl.refresh);
 router.post("/signout", authenticate, authCtrl.signOut);
 router.get("/current", authenticate, authCtrl.getCurrent);
 router.delete("/current", authenticate, authCtrl.removeCurrent);

@@ -14,7 +14,7 @@ const authenticate = async (
 ) => {
   const { authorization = "" } = req.headers;
 
-  const [bearer, token] = authorization.split(" ");
+  const [bearer, token] = authorization.split(" "); // access token
   if (bearer !== "Bearer") {
     next(HttpError(401, "Missing token"));
   }
@@ -27,7 +27,7 @@ const authenticate = async (
 
     const user = await User.findById(id);
 
-    if (!user || !user.token || user.token !== token) {
+    if (!user) {
       next(HttpError(401, "Invalid or missing token"));
     }
     req.user = user;

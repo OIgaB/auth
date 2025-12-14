@@ -6,7 +6,7 @@ import handleMongooseError from "../middlewares/handleMongooseError.js";
 export interface IUser {
   email: string;
   password: string;
-  token: string;
+  refreshToken: string;
 }
 export interface IUserDocument extends IUser, Document {
   _id: Types.ObjectId;
@@ -29,7 +29,7 @@ const userSchema = new Schema(
       minlength: 6,
       required: [true, "Set password for user"],
     },
-    token: {
+    refreshToken: {
       type: String,
       default: "",
     },

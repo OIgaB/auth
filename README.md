@@ -36,6 +36,13 @@ This is a [Node.js](https://nodejs.org/) project that uses a non-relational data
 - finding the user in the database by identifier;
 - handling authentication and server errors with structured responses.
 
+### Removing current user process includes:
+- extracting the JWT from the Authorization header;
+- verifying the JWT signature and expiration;
+- extracting the user identifier from the token payload;
+- finding the user in the database by identifier and removing him/her;
+- handling authentication and server errors with structured responses.
+
 ---
 
 ## Getting Started
@@ -119,6 +126,7 @@ After successful signout, the JWT becomes invalid even if it has not yet expired
 <table><tr><td>current user:</td></tr></table>
 
 $\color{Cyan}{🔵 GET-request}$
+$\color{BrickRed}{🔴 DELETE-request}$
 
 Bearer Token is required
 

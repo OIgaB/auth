@@ -75,9 +75,17 @@ const getCurrent = async (req: Request, res: Response) => {
   res.json({ email });
 };
 
+const removeCurrent = async (req: Request, res: Response) => {
+  const { _id } = req.user;
+  await User.findByIdAndDelete(_id);
+
+  res.status(204).send();
+};
+
 export default {
   register: ctrlWrapper(register),
   signIn: ctrlWrapper(signIn),
   signOut: ctrlWrapper(signOut),
   getCurrent: ctrlWrapper(getCurrent),
+  removeCurrent: ctrlWrapper(removeCurrent),
 };

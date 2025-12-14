@@ -63,7 +63,17 @@
  *           type: string
  *           format: email
  *           example: "user@example.com"
- *     
+ * 
+ *     RefreshSuccessResponse:
+ *       type: object
+ *       required:
+ *         - token
+ *       properties:
+ *         token:
+ *           type: string
+ *           description: JWT token used for authenticated requests.
+ *           example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ * 
  *     ValidationErrorResponse:
  *       type: object
  *       properties:

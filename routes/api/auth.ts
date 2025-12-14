@@ -102,6 +102,38 @@ const router = express.Router();
 
 /**
  * @swagger
+ * /api/auth/refresh:
+ *   post:
+ *     summary: Refresh access token
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Access token refreshed successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RefreshSuccessResponse'
+ *       401:
+ *         description: Unauthorized — invalid or missing refresh token.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UnauthorizedErrorResponse'
+ *             examples:
+ *               invalidRefreshToken:
+ *                 value:
+ *                   statusCode: 401
+ *                   message: "Invalid or missing refresh token"
+ *       500:
+ *         description: Internal Server Error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ServerErrorResponse'
+ */
+
+/**
+ * @swagger
  * /api/auth/signout:
  *   post:
  *     summary: Sign out the current user

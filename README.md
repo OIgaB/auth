@@ -106,6 +106,7 @@ $\color{LimeGreen}{🟢 POST-request}$
 Body (raw, JSON):
 ```bash 
 {
+  "name": "Oles",
   "email": "example@mail.com",
   "password": "example_password"
 }

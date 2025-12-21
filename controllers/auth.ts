@@ -7,6 +7,7 @@ import { HttpError } from "../helpers/HttpError.js";
 import { User } from "../models/user.js";
 
 interface RegisterRequestBody {
+  name: string;
   email: string;
   password: string;
 }
@@ -29,6 +30,7 @@ const register = async (
 
   res.status(201).json({
     user: {
+      name: newUser.name,
       email: newUser.email,
     },
   });

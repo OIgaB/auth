@@ -4,6 +4,7 @@ import { Document, model, Query, Schema, Types } from "mongoose";
 import handleMongooseError from "../middlewares/handleMongooseError.js";
 
 export interface IUser {
+  name: string;
   email: string;
   password: string;
   refreshToken: string;
@@ -18,6 +19,11 @@ const emailMessage =
 
 const userSchema = new Schema(
   {
+    name: {
+      type: String,
+      minlength: 2,
+      required: [true, "Set name for user"],
+    },
     email: {
       type: String,
       match: emailRegExp,
@@ -48,6 +54,7 @@ userSchema.post<Query<IUser, Document<IUser>>>(
 );
 
 const registerSchema = Joi.object({
+  name: Joi.string().min(2).message("Ensure your name contains at least 2 letters").required(),
   email: Joi.string().pattern(emailRegExp).message(emailMessage).required(),
   password: Joi.string()
     .min(6)

@@ -8,6 +8,7 @@ export interface IUser {
   email: string;
   password: string;
   refreshToken: string;
+  avatarURL: string,
 }
 export interface IUserDocument extends IUser, Document {
   _id: Types.ObjectId;
@@ -39,6 +40,7 @@ const userSchema = new Schema(
       type: String,
       default: "",
     },
+    avatarURL: String,
   },
   { versionKey: false, timestamps: true }
 );

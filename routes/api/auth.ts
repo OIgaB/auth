@@ -228,6 +228,7 @@ const router = express.Router();
 
 router.post(
   "/signup",
+  upload.single("avatar"),
   isEmptyBody,
   validateBody(schemas.registerSchema),
   authCtrl.register

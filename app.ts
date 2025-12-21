@@ -20,6 +20,8 @@ app.use(cookieParser());
 
 app.use(express.json());
 
+app.use(express.static('public')); // якщо прийде запит на статичний файл, шукай його в папці public і віддавай
+
 const swaggerOptions = {
   definition: {
     openapi: "3.0.0",

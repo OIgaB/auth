@@ -1,6 +1,10 @@
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
+import fs from "fs/promises";
+import gravatar from "gravatar";
+import { Jimp } from "jimp";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import path from "path";
 
 import { ctrlWrapper } from "../decorators/index.js";
 import { HttpError } from "../helpers/HttpError.js";
@@ -10,6 +14,7 @@ interface RegisterRequestBody {
   name: string;
   email: string;
   password: string;
+  avatarURL: string;
 }
 
 const { SECRET_KEY, REFRESH_SECRET_KEY } = process.env;
@@ -26,12 +31,39 @@ const register = async (
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
-  const newUser = await User.create({ ...req.body, password: hashPassword });
+
+  let avatarURL = gravatar.url(email, {
+    s: "250",
+    d: "identicon",
+    protocol: "https",
+  });
+
+  if (req.file) {
+    const { path: oldPath, filename } = req.file;
+
+    const avatarDir = path.resolve("public", "avatars"); 
+    const newPath = path.join(avatarDir, filename);
+    
+    const image = await Jimp.read(oldPath);
+    image.resize({ w: 250, h: 250 });
+    await image.write(newPath as `${string}.${string}`);
+
+    await fs.rename(oldPath, newPath); 
+
+    avatarURL = path.join("avatars", filename);
+  }
+
+  const newUser = await User.create({
+    ...req.body,
+    password: hashPassword,
+    avatarURL,
+  });
 
   res.status(201).json({
     user: {
       name: newUser.name,
       email: newUser.email,
+      avatarURL: newUser.avatarURL,
     },
   });
 };

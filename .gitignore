@@ -1,3 +1,6 @@
+public/avatars/
+temp/
+
 # Logs
 logs
 *.log

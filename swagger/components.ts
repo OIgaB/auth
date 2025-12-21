@@ -10,9 +10,15 @@
  *     AuthBody:
  *       type: object
  *       required:
+ *         - name
  *         - email
  *         - password
  *       properties:
+ *         name:
+ *           type: string
+ *           minLength: 2
+ *           description: User's name.
+ *           example: "Oles"
  *         email:
  *           type: string
  *           format: email
@@ -28,8 +34,14 @@
  *     SignupSuccessResponse:
  *       type: object
  *       required:
+ *         - name
  *         - email
  *       properties:
+ *         name:
+ *           type: string
+ *           minLength: 2
+ *           description: User's name.
+ *           example: "Oles"
  *         email:
  *           type: string
  *           format: email
